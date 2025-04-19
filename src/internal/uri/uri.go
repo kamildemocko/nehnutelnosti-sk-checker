@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-const URL_BASE = "https://www.nehnutelnosti.sk/vysledky/3-izbove-byty/kosice/predaj?areaTo=90&priceTo=200000&areaFrom=30&priceFrom=100000"
-
 var (
 	ErrUrlBuildPlaceMissing = errors.New("place value missing, fe 'kosice'")
 	ErrUrlBuildSizeMissing  = errors.New("size value missing, ex. '3-izbove-byty'")
@@ -24,7 +22,7 @@ type Uri struct {
 }
 
 func NewUrlBuilder() *Uri {
-	return &Uri{root: "https://www.nehnutelnosti.sk/vysledky/$size/$place/kupa"}
+	return &Uri{root: "https://www.nehnutelnosti.sk/vysledky/$size/$place/predaj"}
 }
 
 // place - city, ex. "kosice"
@@ -93,6 +91,8 @@ func (u *Uri) Build() (string, error) {
 
 	url = strings.Replace(url, "$place", u.place, 1)
 	url = strings.Replace(url, "$size", u.size, 1)
+
+	fmt.Println(url)
 
 	return url, nil
 }

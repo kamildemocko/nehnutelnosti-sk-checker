@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"nehnutelnosti-sk/src/internal/parser"
 	"nehnutelnosti-sk/src/internal/scrapper"
 )
 
@@ -12,12 +13,23 @@ type App struct {
 
 func (a *App) CheckUpdated() {
 	for _, p := range a.uri {
-		text, err := scrapper.ScrapWebPage(p)
+		html, err := scrapper.ScrapWebPage(p)
 		if err != nil {
+			// todo
 			log.Println(err)
 			continue
 		}
 
-		fmt.Println(text)
+		parser, err := parser.NewParser(html)
+		if err != nil {
+			// todo
+			continue
+		}
+
+		// todo
+		flats := parser.ParseFlats()
+		for _, flat := range flats {
+			fmt.Println(flat)
+		}
 	}
 }
