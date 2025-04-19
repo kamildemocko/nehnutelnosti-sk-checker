@@ -6,7 +6,8 @@ import (
 )
 
 type Storage interface {
-	AreInStore() (bool, error)
+	Create() error
+	SelectExistingFlats(flats []parser.Flat) ([]*parser.Flat, error)
 	InsertToStore(flats []parser.Flat) error
 }
 
