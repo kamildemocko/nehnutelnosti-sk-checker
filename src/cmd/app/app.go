@@ -23,6 +23,10 @@ func (a *App) CheckUpdated() error {
 		}
 
 		flats := parser.ParseFlats()
+		if len(flats) == 0 {
+			return nil
+		}
+
 		// remove printing
 		for _, flat := range flats {
 			fmt.Println(flat)
