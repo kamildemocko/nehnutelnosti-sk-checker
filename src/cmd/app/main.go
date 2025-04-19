@@ -19,5 +19,8 @@ func main() {
 		},
 	}
 
-	app.CheckUpdated()
+	err = app.CheckUpdated()
+	if err != nil {
+		panic(err)
+	}
 }
