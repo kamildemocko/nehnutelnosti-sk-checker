@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"nehnutelnosti-sk/src/internal/uri"
+	"os"
 )
 
 func main() {
@@ -35,6 +36,8 @@ func main() {
 }
 
 func initDB() (*sql.DB, error) {
+	_ = os.Mkdir("./data", 0755)
+
 	sqlite, err := sql.Open("sqlite3", "./data/data.db")
 	if err != nil {
 		return nil, err
