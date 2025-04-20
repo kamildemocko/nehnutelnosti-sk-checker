@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"nehnutelnosti-sk/src/internal/parser"
 	"nehnutelnosti-sk/src/internal/scrapper"
 	"nehnutelnosti-sk/src/internal/store"
@@ -47,15 +48,17 @@ func (a *App) CheckUpdated() error {
 			return err
 		}
 
-		if len(existingFlats) == 0 {
-			return nil
-		}
+		fmt.Println(existingFlats)
 
 		// determine what flats are new
 
 		// send notification for any new flats
 
 		// insert new flats
+		err = repo.InsertToStore(flats)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

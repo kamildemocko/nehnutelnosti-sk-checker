@@ -1,10 +1,10 @@
 package parser
 
 type Flat struct {
-	title   string
-	address string
-	size    string
-	area    int
-	price   int
-	link    string
+	Title   string
+	Address string
+	Size    string
+	Area    int
+	Price   int
+	Link    string
 }

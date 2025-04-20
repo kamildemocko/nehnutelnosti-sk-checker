@@ -7,8 +7,8 @@ import (
 
 type Storage interface {
 	Create() error
-	SelectExistingFlats(flats []parser.Flat) ([]*parser.Flat, error)
-	InsertToStore(flats []parser.Flat) error
+	SelectExistingFlats(flats []*parser.Flat) ([]*parser.Flat, error)
+	InsertToStore(flats []*parser.Flat) error
 }
 
 func NewStorage(db *sql.DB) Storage {

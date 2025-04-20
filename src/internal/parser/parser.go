@@ -23,8 +23,8 @@ func NewParser(html string) (*Parser, error) {
 }
 
 // parse all flats from webpage
-func (p *Parser) ParseFlats() []Flat {
-	var flats []Flat
+func (p *Parser) ParseFlats() []*Flat {
+	var flats []*Flat
 
 	p.doc.Find("h2.MuiTypography-root").Each(func(_ int, s *goquery.Selection) {
 		item := s.Parent().Parent()
@@ -36,13 +36,13 @@ func (p *Parser) ParseFlats() []Flat {
 		area := item.Find("p").Eq(2).Text()
 		price := item.Find("p").Eq(6).Text()
 
-		flats = append(flats, Flat{
-			title:   title,
-			address: address,
-			size:    size,
-			area:    parseArea(area),
-			price:   parsePrice(price),
-			link:    link,
+		flats = append(flats, &Flat{
+			Title:   title,
+			Address: address,
+			Size:    size,
+			Area:    parseArea(area),
+			Price:   parsePrice(price),
+			Link:    link,
 		})
 	})
 
