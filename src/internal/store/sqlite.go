@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"nehnutelnosti-sk/src/internal/parser"
+	"strings"
 	"time"
 )
 
@@ -50,13 +51,58 @@ func (ss *SqliteStorage) Create() error {
 }
 
 func (ss *SqliteStorage) SelectExistingFlats(flats []*parser.Flat) ([]*parser.Flat, error) {
-	return nil, nil
+	fmt.Println("selecting existing flats from db")
+
+	if len(flats) == 0 {
+		return []*parser.Flat{}, nil
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	placeholders := make([]string, len(flats))
+	args := make([]any, len(flats))
+
+	for i, flat := range flats {
+		placeholders[i] = "?"
+		args[i] = flat.Title
+	}
+
+	query := fmt.Sprintf(`SELECT title, address, size, area, price, link 
+	FROM seen WHERE title in (%s)`, strings.Join(placeholders, ","))
+
+	rows, err := ss.db.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var gotFlats []*parser.Flat
+	for rows.Next() {
+		var f parser.Flat
+
+		err := rows.Scan(
+			&f.Title,
+			&f.Address,
+			&f.Size,
+			&f.Area,
+			&f.Price,
+			&f.Link,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		gotFlats = append(gotFlats, &f)
+	}
+
+	return gotFlats, nil
 }
 
 func (ss *SqliteStorage) InsertToStore(flats []*parser.Flat) error {
 	fmt.Println("inserting into db")
 
-	query := `INSERT INTO seen 
+	query := `INSERT OR IGNORE INTO seen 
 	(title, created, address, size, area, price, link) 
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
 

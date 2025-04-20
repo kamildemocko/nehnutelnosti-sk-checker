@@ -92,7 +92,7 @@ func (u *Uri) Build() (string, error) {
 	url = strings.Replace(url, "$place", u.place, 1)
 	url = strings.Replace(url, "$size", u.size, 1)
 
-	fmt.Println(url)
+	fmt.Println("uri: ", url)
 
 	return url, nil
 }
