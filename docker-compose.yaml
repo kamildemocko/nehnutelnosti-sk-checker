@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  nehnutelnosti-checker:
+    build: .
+    volumes:
+      - ./data:/app/data
