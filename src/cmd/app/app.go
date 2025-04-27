@@ -10,7 +10,7 @@ import (
 	"nehnutelnosti-sk/src/internal/scrapper"
 	"nehnutelnosti-sk/src/internal/store"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 type App struct {
