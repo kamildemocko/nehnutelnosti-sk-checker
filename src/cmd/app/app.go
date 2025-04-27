@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
+	"fmt"
 	"log"
+	"nehnutelnosti-sk/src/internal/email"
 	"nehnutelnosti-sk/src/internal/parser"
 	"nehnutelnosti-sk/src/internal/scrapper"
 	"nehnutelnosti-sk/src/internal/store"
@@ -11,8 +14,9 @@ import (
 )
 
 type App struct {
-	db  *sql.DB
-	uri []string
+	db    *sql.DB
+	uri   []string
+	email *email.Email
 }
 
 func (a *App) CheckUpdated() error {
@@ -56,14 +60,28 @@ func (a *App) CheckUpdated() error {
 			return nil
 		}
 
-		// send notification for any new flats
-		log.Println("sending notification")
-
 		// insert new flats
 		err = repo.InsertToStore(flats)
 		if err != nil {
 			return err
 		}
+
+		// send notification for any new flats
+		log.Println("sending notification")
+
+		var message bytes.Buffer
+		for _, f := range newFlats {
+			message.WriteString(fmt.Sprintf(
+				`<h3>%s</h3>
+				<p>adresa: %s</p>
+				<p>plocha: %dm2</p>
+				<p>cena: %deur</p>
+				<p><a href="%s">link</a></p>
+				<br>
+			`, f.Title, f.Address, f.Area, f.Price, f.Link))
+		}
+
+		a.email.Send(message.String())
 	}
 
 	return nil
