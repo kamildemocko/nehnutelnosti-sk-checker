@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
+RUN apk add --no-cache build-base gcc musl-dev sqlite-dev
+
 RUN go mod download
 
 COPY . .
