@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	"log"
 	"nehnutelnosti-sk/src/internal/parser"
 	"nehnutelnosti-sk/src/internal/scrapper"
 	"nehnutelnosti-sk/src/internal/store"
@@ -25,6 +25,7 @@ func (a *App) CheckUpdated() error {
 
 	for _, p := range a.uri {
 		// scrap page
+		log.Println("scrapping web page")
 		html, err := scrapper.ScrapWebPage(p)
 		if err != nil {
 			return err
@@ -48,11 +49,15 @@ func (a *App) CheckUpdated() error {
 			return err
 		}
 
-		fmt.Println(existingFlats)
-
 		// determine what flats are new
+		newFlats := findNewFlats(flats, existingFlats)
+		if len(newFlats) == 0 {
+			log.Println("no new flats")
+			return nil
+		}
 
 		// send notification for any new flats
+		log.Println("sending notification")
 
 		// insert new flats
 		err = repo.InsertToStore(flats)
@@ -62,4 +67,20 @@ func (a *App) CheckUpdated() error {
 	}
 
 	return nil
+}
+
+func findNewFlats(allFlats, existingFlats []*parser.Flat) []*parser.Flat {
+	var existing = map[string]bool{}
+	for _, f := range existingFlats {
+		existing[f.Title] = true
+	}
+
+	var newOnes = []*parser.Flat{}
+	for _, f := range allFlats {
+		if !existing[f.Title] {
+			newOnes = append(newOnes, f)
+		}
+	}
+
+	return newOnes
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"nehnutelnosti-sk/src/internal/parser"
 	"strings"
 	"time"
@@ -14,7 +15,7 @@ type SqliteStorage struct {
 }
 
 func (ss *SqliteStorage) Create() error {
-	fmt.Println("creating db")
+	log.Println("creating db")
 
 	query := `CREATE TABLE IF NOT EXISTS seen (
 	title TEXT PRIMARY KEY,
@@ -51,7 +52,7 @@ func (ss *SqliteStorage) Create() error {
 }
 
 func (ss *SqliteStorage) SelectExistingFlats(flats []*parser.Flat) ([]*parser.Flat, error) {
-	fmt.Println("selecting existing flats from db")
+	log.Println("selecting existing flats from db")
 
 	if len(flats) == 0 {
 		return []*parser.Flat{}, nil
@@ -100,7 +101,7 @@ func (ss *SqliteStorage) SelectExistingFlats(flats []*parser.Flat) ([]*parser.Fl
 }
 
 func (ss *SqliteStorage) InsertToStore(flats []*parser.Flat) error {
-	fmt.Println("inserting into db")
+	log.Println("inserting into db")
 
 	query := `INSERT OR IGNORE INTO seen 
 	(title, created, address, size, area, price, link) 
