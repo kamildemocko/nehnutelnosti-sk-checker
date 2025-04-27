@@ -24,4 +24,16 @@ SUBJECT=your subject!
 ```
 go run .\src\cmd\app\
 ```
+
+## Build release
+Windows
+```cmd
+set GOOS=windows
+go build -o .\dist\nehnutelnosti-checker.exe ./src/cmd/app
+```
     
+Linux
+```bash
+set GOOS=linux
+go build -o ./dist/nehnutelnosti-checker ./src/cmd/app
+```
