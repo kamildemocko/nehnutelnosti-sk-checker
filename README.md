@@ -37,3 +37,4 @@ Linux
 set GOOS=linux
 go build -o ./dist/nehnutelnosti-checker ./src/cmd/app
 ```
+add `CGO_ENABLED=0` option if using unsupported arm (for sqlite3)
