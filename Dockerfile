@@ -8,11 +8,10 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o /app/nehnutelnosti-checker ./src/cmd/app
+RUN CGO_ENABLED=1 go build -o /app/nehnutelnosti-checker ./src/cmd/app
 
 FROM alpine:latest
 
-# Install required libraries for SQLite
 RUN apk add --no-cache libc6-compat sqlite-libs
 
 WORKDIR /app
