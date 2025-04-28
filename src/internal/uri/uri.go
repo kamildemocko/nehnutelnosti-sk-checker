@@ -66,7 +66,7 @@ func (u *Uri) Build() (string, error) {
 	switch {
 	case u.areaFrom != 0 && u.priceFrom != 0:
 		url = fmt.Sprintf(
-			"%s?areaTo=%d&priceTo=%d&areaFrom=%d&priceFrom=%d",
+			"%s?areaTo=%d&priceTo=%d&areaFrom=%d&priceFrom=%d&order=NEWEST",
 			u.root,
 			u.areaTo,
 			u.priceTo,

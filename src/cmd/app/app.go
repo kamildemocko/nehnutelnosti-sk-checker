@@ -42,6 +42,7 @@ func (a *App) CheckUpdated() error {
 		}
 
 		// get all the flats from the first page
+		log.Println("parsing flats")
 		flats := parser.ParseFlats()
 		if len(flats) == 0 {
 			return nil

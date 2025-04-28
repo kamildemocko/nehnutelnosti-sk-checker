@@ -30,7 +30,10 @@ func (p *Parser) ParseFlats() []*Flat {
 		item := s.Parent().Parent()
 
 		title := item.Find("h2").Text()
-		link := item.Find("a").First().AttrOr("href", "")
+		link := item.Find("a").First().AttrOr(
+			"href", 
+			"https://seosherpa.com/wp-content/uploads/2020/12/custom-404-error-page.png"
+		)
 		address := item.Find("p").Eq(0).Text()
 		size := item.Find("p").Eq(1).Text()
 		area := item.Find("p").Eq(2).Text()
@@ -60,7 +63,12 @@ func parseArea(area string) int {
 }
 
 func parsePrice(price string) int {
-	priceStr := price[:strings.LastIndex(price, " ")]
+	lastSpaceIndex := strings.LastIndex(price, " ")
+	if lastSpaceIndex == -1 {
+		return 0
+	}
+
+	priceStr := price[:lastSpaceIndex]
 	priceStr = strings.ReplaceAll(priceStr, "\u00A0", "")
 	priceInt, err := strconv.Atoi(priceStr)
 	if err != nil {
