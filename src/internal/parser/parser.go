@@ -26,28 +26,32 @@ func NewParser(html string) (*Parser, error) {
 func (p *Parser) ParseFlats() []*Flat {
 	var flats []*Flat
 
-	p.doc.Find("h2.MuiTypography-root").Each(func(_ int, s *goquery.Selection) {
-		item := s.Parent().Parent()
+	p.doc.Find(
+		".MuiContainer-root > .MuiContainer-root > .MuiBox-root > .MuiBox-root > .MuiBox-root").
+		Each(func(i int, item *goquery.Selection) {
+			title := item.Find("h2").Text()
+			link := item.Find("a").First().AttrOr(
+				"href",
+				"https://seosherpa.com/wp-content/uploads/2020/12/custom-404-error-page.png",
+			)
+			address := item.Find("p").Eq(0).Text()
+			size := item.Find("p").Eq(1).Text()
+			area := item.Find("p").Eq(2).Text()
+			price := item.Find("p").Eq(11).Text()
 
-		title := item.Find("h2").Text()
-		link := item.Find("a").First().AttrOr(
-			"href", 
-			"https://seosherpa.com/wp-content/uploads/2020/12/custom-404-error-page.png"
-		)
-		address := item.Find("p").Eq(0).Text()
-		size := item.Find("p").Eq(1).Text()
-		area := item.Find("p").Eq(2).Text()
-		price := item.Find("p").Eq(6).Text()
+			if title == "" {
+				return
+			}
 
-		flats = append(flats, &Flat{
-			Title:   title,
-			Address: address,
-			Size:    size,
-			Area:    parseArea(area),
-			Price:   parsePrice(price),
-			Link:    link,
+			flats = append(flats, &Flat{
+				Title:   title,
+				Address: address,
+				Size:    size,
+				Area:    parseArea(area),
+				Price:   parsePrice(price),
+				Link:    link,
+			})
 		})
-	})
 
 	return flats
 }
